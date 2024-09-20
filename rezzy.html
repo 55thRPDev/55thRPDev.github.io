@@ -29,7 +29,7 @@
             100% { transform: rotate(1deg); }
         }
 
-        #startBtn {
+        #startBtn, #restartBtn {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -44,11 +44,31 @@
         }
 
         .message {
-            font-size: 24px;
+            font-size: 5em;
             color: red;
             text-align: center;
             margin-top: 20px;
             display: none;
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            width: 80%;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .game-over {
+            font-size: 3em;
+            color: blue;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            width: 80%;
+            text-transform: uppercase;
+            line-height: 1;
         }
 
         /* Flash animation */
@@ -57,6 +77,10 @@
             50% { background-color: white; }
             100% { background-color: green; }
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +88,8 @@
     <button id="startBtn">Start</button>
     <canvas id="snakeGame" width="400" height="400" style="display:none;"></canvas>
     <div class="message" id="message">REZZY ROLLERBLADES TO WORK</div>
+    <div class="game-over" id="gameOver">GO CRY IN SANDRA AND TRY AGAIN?</div>
+    <button id="restartBtn" class="hidden">Restart</button>
 
     <script>
         const canvas = document.getElementById("snakeGame");
@@ -76,11 +102,19 @@
         let score = 0;
         let game;
         
+        const startBtn = document.getElementById("startBtn");
+        const restartBtn = document.getElementById("restartBtn");
+        const message = document.getElementById("message");
+        const gameOver = document.getElementById("gameOver");
+
         // Click start button to start game
-        document.getElementById("startBtn").addEventListener("click", startGame);
+        startBtn.addEventListener("click", startGame);
+
+        // Click restart button to restart game
+        restartBtn.addEventListener("click", () => location.reload());
 
         function startGame() {
-            document.getElementById("startBtn").style.display = "none";
+            startBtn.style.display = "none";
             canvas.style.display = "block";
             direction = null;
             document.addEventListener("keydown", changeDirection);
@@ -136,9 +170,10 @@
             // Add new head
             let newHead = {x: snakeX, y: snakeY};
 
-            // Game over condition
+            // Game over condition (if snake hits walls or corners)
             if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
                 clearInterval(game);
+                displayGameOver();
             }
 
             snake.unshift(newHead);
@@ -146,7 +181,7 @@
 
         function endGame() {
             clearInterval(game);
-            document.getElementById("message").style.display = "block";
+            message.style.display = "block";
 
             // Start flashing the screen
             document.body.style.animation = "flash 0.5s infinite";
@@ -159,6 +194,11 @@
                 }
             }
             return false;
+        }
+
+        function displayGameOver() {
+            gameOver.style.display = "block";
+            restartBtn.classList.remove("hidden");
         }
     </script>
 </body>
