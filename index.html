@@ -33,11 +33,7 @@
 
         .shaking {
             display: inline-block;
-            animation: shake 2s ease-in-out;
-        }
-
-        .hidden {
-            display: none;
+            animation: shake 2s infinite ease-in-out;
         }
 
         @keyframes shake {
@@ -54,48 +50,63 @@
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        .still {
-            display: inline-block;
-            animation: none;
+        /* Grid Styling */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            margin-top: 30px;
+            width: 60%;
         }
 
-        .content {
-            margin-top: 30px;
+        .box {
+            background-color: #ddd;
+            border: 2px solid #bbb;
+            padding: 40px;
+            text-align: center;
             font-size: 1.2em;
-            max-width: 600px;
-            text-align: left;
-            line-height: 1.6;
+            transition: background-color 0.3s ease;
+        }
+
+        .box:hover {
+            background-color: #ccc;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Logo image (placeholder or real image can be linked) -->
+        <img src="logo.png" alt="Quakes Dev Zone Logo" class="logo">
 
         <h1>
             <span id="quake" class="shaking">Quake</span> 
             <span>Dev Zone</span>
         </h1>
 
-        <!-- Placeholder content for the blog -->
-        <div class="content">
-            <p></p>
+        <!-- 3x3 grid of boxes -->
+        <div class="grid">
+            <div class="box">
+                <a href="anb.html">Airsoft/Autism NB</a>
+            </div>
+            <div class="box">Box 2</div>
+            <div class="box">Box 3</div>
+            <div class="box">Box 4</div>
+            <div class="box">Box 5</div>
+            <div class="box">Box 6</div>
+            <div class="box">Box 7</div>
+            <div class="box">Box 8</div>
+            <div class="box">Box 9</div>
         </div>
     </div>
-
-    <script>
-        function stopShaking() {
-            const quake = document.getElementById('quake');
-
-            // After the shaking animation finishes, stop the shake and set it still
-            setTimeout(() => {
-                quake.classList.remove('shaking');
-                quake.classList.add('still');
-            }, 2000); // Shaking for 2 seconds
-        }
-
-        // Start the animation on page load
-        window.onload = stopShaking;
-    </script>
 </body>
 </html>
