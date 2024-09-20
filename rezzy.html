@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezzy The Peat Snake</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: wiggle 1s infinite ease-in-out;
+        }
+
+        @keyframes wiggle {
+            0% { transform: rotate(1deg); }
+            50% { transform: rotate(-1deg); }
+            100% { transform: rotate(1deg); }
+        }
+
+        #startBtn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        #snakeGame {
+            border: 2px solid black;
+        }
+
+        .message {
+            font-size: 24px;
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>REZZY THE PEAT SNAKE</h1>
+    <button id="startBtn">Start</button>
+    <canvas id="snakeGame" width="400" height="400" style="display:none;"></canvas>
+    <div class="message" id="message"></div>
+
+    <script>
+        const canvas = document.getElementById("snakeGame");
+        const ctx = canvas.getContext("2d");
+
+        const box = 20;
+        let snake = [{x: 9 * box, y: 10 * box}];
+        let direction;
+        let food = {x: Math.floor(Math.random() * 19) * box, y: Math.floor(Math.random() * 19) * box};
+        let score = 0;
+        let game;
+        
+        // Click start button to start game
+        document.getElementById("startBtn").addEventListener("click", startGame);
+
+        function startGame() {
+            document.getElementById("startBtn").style.display = "none";
+            canvas.style.display = "block";
+            direction = null;
+            document.addEventListener("keydown", changeDirection);
+            game = setInterval(draw, 100);
+        }
+
+        function changeDirection(event) {
+            if (event.keyCode === 37 && direction !== "RIGHT") direction = "LEFT";
+            else if (event.keyCode === 38 && direction !== "DOWN") direction = "UP";
+            else if (event.keyCode === 39 && direction !== "LEFT") direction = "RIGHT";
+            else if (event.keyCode === 40 && direction !== "UP") direction = "DOWN";
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = (i === 0) ? "green" : "white";
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                ctx.strokeStyle = "black";
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+            }
+
+            // Draw food (green bundles of peat moss)
+            ctx.fillStyle = "green";
+            ctx.fillRect(food.x, food.y, box, box);
+
+            // Old head position
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            // Direction of movement
+            if (direction === "LEFT") snakeX -= box;
+            if (direction === "UP") snakeY -= box;
+            if (direction === "RIGHT") snakeX += box;
+            if (direction === "DOWN") snakeY += box;
+
+            // If the snake eats the peat moss (food)
+            if (snakeX === food.x && snakeY === food.y) {
+                score++;
+                food = {x: Math.floor(Math.random() * 19) * box, y: Math.floor(Math.random() * 19) * box};
+
+                // End game when 10 bundles are eaten
+                if (score === 10) {
+                    document.getElementById("message").textContent = "Rezzy rollerblades to work";
+                    clearInterval(game);
+                }
+            } else {
+                // Remove the tail
+                snake.pop();
+            }
+
+            // Add new head
+            let newHead = {x: snakeX, y: snakeY};
+
+            // Game over condition
+            if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(game);
+            }
+
+            snake.unshift(newHead);
+        }
+
+        function collision(head, snake) {
+            for (let i = 0; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
