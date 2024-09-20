@@ -43,6 +43,10 @@
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
+
+        .visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -58,19 +62,40 @@
             const airsoft = document.getElementById('airsoft');
             const autism = document.getElementById('autism');
 
-            // Start the crumble animation
-            airsoft.classList.add('crumbled');
-
-            // After the crumble animation finishes, replace with "Autism"
+            // Keep "Airsoft" visible for a few more seconds
             setTimeout(() => {
-                airsoft.classList.add('hidden');
-                autism.classList.remove('hidden');
-                autism.classList.add('reveal');
-            }, 2000); // Match with the crumble animation duration
+                // Start the crumble animation
+                airsoft.classList.add('crumbled');
+
+                // After the crumble animation finishes, replace with "Autism"
+                setTimeout(() => {
+                    airsoft.classList.add('hidden');
+                    autism.classList.remove('hidden');
+                    autism.classList.add('reveal');
+                }, 2000); // Match with the crumble animation duration
+            }, 3000); // Wait for 3 seconds before starting the crumble
+        }
+
+        function resetAnimation() {
+            const airsoft = document.getElementById('airsoft');
+            const autism = document.getElementById('autism');
+
+            // Reset to initial state
+            airsoft.classList.remove('crumbled', 'hidden');
+            autism.classList.add('hidden');
+            autism.classList.remove('reveal');
+
+            // Start the animation again
+            crumbleText();
         }
 
         // Start the animation on page load
-        window.onload = crumbleText;
+        window.onload = () => {
+            crumbleText();
+
+            // Loop the animation every 10 seconds (3s visible, 2s crumble, 5s pause)
+            setInterval(resetAnimation, 10000);
+        };
     </script>
 </body>
 </html>
