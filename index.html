@@ -58,15 +58,18 @@
             const airsoft = document.getElementById('airsoft');
             const autism = document.getElementById('autism');
 
-            // Start the crumble animation
-            airsoft.classList.add('crumbled');
-
-            // After the crumble animation finishes, replace with "Autism"
+            // Keep "Airsoft" visible for 2 more seconds before starting the crumble animation
             setTimeout(() => {
-                airsoft.classList.add('hidden');
-                autism.classList.remove('hidden');
-                autism.classList.add('reveal');
-            }, 2000); // Match with the crumble animation duration
+                // Start the crumble animation
+                airsoft.classList.add('crumbled');
+
+                // After the crumble animation finishes, replace with "Autism"
+                setTimeout(() => {
+                    airsoft.classList.add('hidden');
+                    autism.classList.remove('hidden');
+                    autism.classList.add('reveal');
+                }, 2000); // Match with the crumble animation duration
+            }, 2000); // Wait for 2 seconds before starting the crumble
         }
 
         // Start the animation on page load
