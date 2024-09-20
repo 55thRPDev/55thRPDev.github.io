@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airsoft New Brunswick Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .crumbled {
+            display: inline-block;
+            animation: crumble 2s forwards;
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes crumble {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(100px); }
+        }
+
+        .reveal {
+            opacity: 0;
+            animation: revealText 2s forwards;
+        }
+
+        @keyframes revealText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span id="airsoft" class="crumbled">Airsoft</span>
+            <span id="autism" class="hidden reveal">Autism</span> New Brunswick
+        </h1>
+    </div>
+
+    <script>
+        function crumbleText() {
+            const airsoft = document.getElementById('airsoft');
+            const autism = document.getElementById('autism');
+
+            // Start the crumble animation
+            airsoft.classList.add('crumbled');
+
+            // After the crumble animation finishes, replace with "Autism"
+            setTimeout(() => {
+                airsoft.classList.add('hidden');
+                autism.classList.remove('hidden');
+                autism.classList.add('reveal');
+            }, 2000); // Match with the crumble animation duration
+        }
+
+        // Start the animation on page load
+        window.onload = crumbleText;
+    </script>
+</body>
+</html>
