@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Fighting Game</title>
+    <title>Red Square in Tavern</title>
     <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
         canvas {
-            background: #fff;
+            background: #f0f0f0;
             display: block;
             margin: 0 auto;
         }
@@ -18,76 +22,49 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Screen dimensions
-        const SCREEN_WIDTH = 800;
-        const SCREEN_HEIGHT = 600;
-
-        // Colors
-        const BLUE = "#0000FF";
-        const RED = "#FF0000";
-        const WHITE = "#FFFFFF";
-        const GOLD = "#FFDF00";
-        const SILVER = "#C0C0C0";
-        const GREEN = "#00FF00";
-        const BROWN = "#8B4513";
-        const BLACK = "#000000";
-
         // Player settings
         const playerSize = 20;
-        let playerPos = { x: SCREEN_WIDTH / 2, y: SCREEN_HEIGHT / 2 };
+        let playerPos = { x: canvas.width / 2, y: canvas.height / 2 };
         const playerSpeed = 4;
         let targetPos = null;
 
-        // Enemy settings
-        const enemySize = 20;
-        let enemies = [];
-        let currentWave = 1;
-        const maxWaves = 5;
-        let bossSpawned = false;
-        let wavesDefeated = 0;
-        let items = [];
+        // Tavern settings
+        const wallThickness = 20;
+        const tableSize = 60;
+        const tables = [
+            { x: 150, y: 100 },
+            { x: 500, y: 150 },
+            { x: 300, y: 400 }
+        ];
 
-        // NPC and door settings
-        const npcPositions = [{ x: 100, y: 100 }, { x: 700, y: 150 }, { x: 300, y: 500 }];
-        const barkeepPos = { x: 400, y: 300 };
-        const doorPos = { x: 750, y: 550 };
+        // Barkeep settings
+        const barkeepPos = { x: 700, y: 300 };
+        const barkeepSize = 30;
 
-        function spawnEnemies(numEnemies) {
-            const newEnemies = [];
-            for (let i = 0; i < numEnemies; i++) {
-                const x = Math.random() * (SCREEN_WIDTH - enemySize);
-                const y = Math.random() * (SCREEN_HEIGHT - enemySize);
-                newEnemies.push({ x, y });
-            }
-            return newEnemies;
-        }
-
-        function moveEnemy(enemy, target) {
-            const dx = target.x - enemy.x;
-            const dy = target.y - enemy.y;
-            const distance = Math.hypot(dx, dy);
-            if (distance > 0) {
-                enemy.x += (dx / distance) * 2;
-                enemy.y += (dy / distance) * 2;
-            }
-        }
-
-        function dropItem(position, isBoss) {
-            if (isBoss) {
-                items.push({ position, type: "rare" });
-            } else {
-                const itemType = Math.random() < 0.67 ? "coin" : "health";
-                items.push({ position, type: itemType });
-            }
-        }
-
+        // Game loop function
         function gameLoop() {
             // Clear the canvas
-            ctx.fillStyle = WHITE;
-            ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw player
-            ctx.fillStyle = BLUE;
+            // Draw tavern walls
+            ctx.fillStyle = "#8B4513";
+            ctx.fillRect(0, 0, canvas.width, wallThickness); // Top wall
+            ctx.fillRect(0, canvas.height - wallThickness, canvas.width, wallThickness); // Bottom wall
+            ctx.fillRect(0, 0, wallThickness, canvas.height); // Left wall
+            ctx.fillRect(canvas.width - wallThickness, 0, wallThickness, canvas.height); // Right wall
+
+            // Draw tables
+            ctx.fillStyle = "#A0522D";
+            tables.forEach(table => {
+                ctx.fillRect(table.x, table.y, tableSize, tableSize);
+            });
+
+            // Draw barkeep
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(barkeepPos.x, barkeepPos.y, barkeepSize, barkeepSize);
+
+            // Draw player (red square)
+            ctx.fillStyle = "#FF0000";
             ctx.fillRect(playerPos.x, playerPos.y, playerSize, playerSize);
 
             // Player movement
@@ -104,61 +81,6 @@
                 }
             }
 
-            // Move enemies
-            for (let enemy of enemies) {
-                moveEnemy(enemy, playerPos);
-            }
-
-            // Draw enemies
-            ctx.fillStyle = RED;
-            for (let enemy of enemies) {
-                ctx.fillRect(enemy.x, enemy.y, enemySize, enemySize);
-            }
-
-            // Check for collisions and remove defeated enemies
-            const defeatedEnemies = [];
-            for (let enemy of enemies) {
-                if (Math.hypot(enemy.x - playerPos.x, enemy.y - playerPos.y) < playerSize) {
-                    defeatedEnemies.push(enemy);
-                }
-            }
-            for (let enemy of defeatedEnemies) {
-                enemies = enemies.filter(e => e !== enemy);
-                dropItem({ x: enemy.x, y: enemy.y }, bossSpawned);
-            }
-
-            // Draw items
-            for (let item of items) {
-                if (item.type === "coin") {
-                    ctx.fillStyle = GOLD;
-                    ctx.beginPath();
-                    ctx.arc(item.position.x, item.position.y, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                } else if (item.type === "health") {
-                    ctx.fillStyle = GREEN;
-                    ctx.beginPath();
-                    ctx.arc(item.position.x, item.position.y, 5, 0, Math.PI * 2);
-                    ctx.fill();
-                } else if (item.type === "rare") {
-                    ctx.fillStyle = SILVER;
-                    ctx.beginPath();
-                    ctx.arc(item.position.x, item.position.y, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            // Spawn next wave if all enemies are defeated
-            if (enemies.length === 0 && currentWave <= maxWaves && !bossSpawned) {
-                currentWave++;
-                wavesDefeated++;
-                if (currentWave > maxWaves) {
-                    bossSpawned = true;
-                    enemies.push({ x: Math.random() * (SCREEN_WIDTH - enemySize), y: Math.random() * (SCREEN_HEIGHT - enemySize) });
-                } else {
-                    enemies = spawnEnemies(currentWave * 2);
-                }
-            }
-
             // Request the next frame
             requestAnimationFrame(gameLoop);
         }
@@ -166,14 +88,28 @@
         // Handle mouse click
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
-            targetPos = {
+            const clickPos = {
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top
             };
+
+            // Check if player clicked on the barkeep
+            if (
+                clickPos.x >= barkeepPos.x &&
+                clickPos.x <= barkeepPos.x + barkeepSize &&
+                clickPos.y >= barkeepPos.y &&
+                clickPos.y <= barkeepPos.y + barkeepSize
+            ) {
+                alert("You interacted with the barkeep!");
+            } else {
+                targetPos = {
+                    x: clickPos.x - playerSize / 2,
+                    y: clickPos.y - playerSize / 2
+                };
+            }
         });
 
-        // Start game in the town
-        enemies = spawnEnemies(3);
+        // Start the game loop
         requestAnimationFrame(gameLoop);
     </script>
 </body>
