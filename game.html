@@ -41,6 +41,10 @@
         const barkeepPos = { x: 700, y: 300 };
         const barkeepSize = 30;
 
+        // Interaction message
+        let interactionMessage = "";
+        let messageTimeout = null;
+
         // Game loop function
         function gameLoop() {
             // Clear the canvas
@@ -66,6 +70,13 @@
             // Draw player (red square)
             ctx.fillStyle = "#FF0000";
             ctx.fillRect(playerPos.x, playerPos.y, playerSize, playerSize);
+
+            // Draw interaction message
+            if (interactionMessage) {
+                ctx.fillStyle = "#000000";
+                ctx.font = "20px Arial";
+                ctx.fillText(interactionMessage, 10, 30);
+            }
 
             // Player movement
             if (targetPos) {
@@ -100,7 +111,11 @@
                 clickPos.y >= barkeepPos.y &&
                 clickPos.y <= barkeepPos.y + barkeepSize
             ) {
-                alert("You interacted with the barkeep!");
+                interactionMessage = "You interacted with the barkeep!";
+                clearTimeout(messageTimeout);
+                messageTimeout = setTimeout(() => {
+                    interactionMessage = "";
+                }, 2000);
             } else {
                 targetPos = {
                     x: clickPos.x - playerSize / 2,
