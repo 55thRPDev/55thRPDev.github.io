@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Fighting Game</title>
+    <style>
+        canvas {
+            background: #fff;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Screen dimensions
+        const SCREEN_WIDTH = 800;
+        const SCREEN_HEIGHT = 600;
+
+        // Colors
+        const BLUE = "#0000FF";
+        const RED = "#FF0000";
+        const WHITE = "#FFFFFF";
+        const GOLD = "#FFDF00";
+        const SILVER = "#C0C0C0";
+        const GREEN = "#00FF00";
+        const BROWN = "#8B4513";
+        const BLACK = "#000000";
+
+        // Player settings
+        const playerSize = 20;
+        let playerPos = { x: SCREEN_WIDTH / 2, y: SCREEN_HEIGHT / 2 };
+        const playerSpeed = 4;
+        let targetPos = null;
+
+        // Enemy settings
+        const enemySize = 20;
+        let enemies = [];
+        let currentWave = 1;
+        const maxWaves = 5;
+        let bossSpawned = false;
+        let wavesDefeated = 0;
+        let items = [];
+
+        // NPC and door settings
+        const npcPositions = [{ x: 100, y: 100 }, { x: 700, y: 150 }, { x: 300, y: 500 }];
+        const barkeepPos = { x: 400, y: 300 };
+        const doorPos = { x: 750, y: 550 };
+
+        function spawnEnemies(numEnemies) {
+            const newEnemies = [];
+            for (let i = 0; i < numEnemies; i++) {
+                const x = Math.random() * (SCREEN_WIDTH - enemySize);
+                const y = Math.random() * (SCREEN_HEIGHT - enemySize);
+                newEnemies.push({ x, y });
+            }
+            return newEnemies;
+        }
+
+        function moveEnemy(enemy, target) {
+            const dx = target.x - enemy.x;
+            const dy = target.y - enemy.y;
+            const distance = Math.hypot(dx, dy);
+            if (distance > 0) {
+                enemy.x += (dx / distance) * 2;
+                enemy.y += (dy / distance) * 2;
+            }
+        }
+
+        function dropItem(position, isBoss) {
+            if (isBoss) {
+                items.push({ position, type: "rare" });
+            } else {
+                const itemType = Math.random() < 0.67 ? "coin" : "health";
+                items.push({ position, type: itemType });
+            }
+        }
+
+        function gameLoop() {
+            // Clear the canvas
+            ctx.fillStyle = WHITE;
+            ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+            // Draw player
+            ctx.fillStyle = BLUE;
+            ctx.fillRect(playerPos.x, playerPos.y, playerSize, playerSize);
+
+            // Player movement
+            if (targetPos) {
+                const dx = targetPos.x - playerPos.x;
+                const dy = targetPos.y - playerPos.y;
+                const distance = Math.hypot(dx, dy);
+                if (distance > playerSpeed) {
+                    playerPos.x += (dx / distance) * playerSpeed;
+                    playerPos.y += (dy / distance) * playerSpeed;
+                } else {
+                    playerPos = { ...targetPos };
+                    targetPos = null;
+                }
+            }
+
+            // Move enemies
+            for (let enemy of enemies) {
+                moveEnemy(enemy, playerPos);
+            }
+
+            // Draw enemies
+            ctx.fillStyle = RED;
+            for (let enemy of enemies) {
+                ctx.fillRect(enemy.x, enemy.y, enemySize, enemySize);
+            }
+
+            // Check for collisions and remove defeated enemies
+            const defeatedEnemies = [];
+            for (let enemy of enemies) {
+                if (Math.hypot(enemy.x - playerPos.x, enemy.y - playerPos.y) < playerSize) {
+                    defeatedEnemies.push(enemy);
+                }
+            }
+            for (let enemy of defeatedEnemies) {
+                enemies = enemies.filter(e => e !== enemy);
+                dropItem({ x: enemy.x, y: enemy.y }, bossSpawned);
+            }
+
+            // Draw items
+            for (let item of items) {
+                if (item.type === "coin") {
+                    ctx.fillStyle = GOLD;
+                    ctx.beginPath();
+                    ctx.arc(item.position.x, item.position.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (item.type === "health") {
+                    ctx.fillStyle = GREEN;
+                    ctx.beginPath();
+                    ctx.arc(item.position.x, item.position.y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (item.type === "rare") {
+                    ctx.fillStyle = SILVER;
+                    ctx.beginPath();
+                    ctx.arc(item.position.x, item.position.y, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Spawn next wave if all enemies are defeated
+            if (enemies.length === 0 && currentWave <= maxWaves && !bossSpawned) {
+                currentWave++;
+                wavesDefeated++;
+                if (currentWave > maxWaves) {
+                    bossSpawned = true;
+                    enemies.push({ x: Math.random() * (SCREEN_WIDTH - enemySize), y: Math.random() * (SCREEN_HEIGHT - enemySize) });
+                } else {
+                    enemies = spawnEnemies(currentWave * 2);
+                }
+            }
+
+            // Request the next frame
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Handle mouse click
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            targetPos = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        });
+
+        // Start game in the town
+        enemies = spawnEnemies(3);
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>
