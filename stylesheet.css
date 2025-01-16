@@ -1,0 +1,311 @@
+/*Define CSS Variables*/
+:root{
+    --background-image: url("./assets/images/bg.jpg");
+    --content-box-colour: #00000075;
+    /*Opted for a solid colour that is visually similar to the less opaque colour above for mobile screens (gets visually messy with low opacity)*/
+    --footer-colour-mobile: #2c2c2c; 
+    --zero-opacity: #00000000;
+    --help-button-colour: #9F1919;
+    --carousel-arrow-active: #FFCF47;
+    --carousel-button-background: #00000000;
+    --hover-colour: #ffffff7e;
+    --text-colour: #ffffff;
+}
+
+/*Page Styling Starts*/
+/*Page Sections*/
+body{
+    margin: 0;
+    background-image: var(--background-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: sans-serif;
+    color: var(--text-colour);
+    width: 100%;
+}
+
+/*Module Content*/
+#textArea{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6rem;
+}
+
+.carousel-container{
+    width: 80%;
+    position: relative;
+    background-color: var(--content-box-colour);
+    margin-top: 2rem;
+    border-radius: 1rem;
+}
+
+.carousel-inner{
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item{
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.carousel-item:not(.active){
+    display: none;
+}
+
+.carousel-control{
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--carousel-button-background);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    color: var(--carousel-arrow-active);
+    font-weight: bolder;
+}
+
+#prev{
+    left: 0.5rem;
+}
+
+#next{
+    right: 0.5rem;
+}
+
+.disabled{
+    opacity: 50%;
+    color: var(--text-colour);
+}
+
+.carousel-mod-title{
+    font-size: 1.5rem;
+    padding: 0rem 1rem;
+}
+
+.barrier{
+    border-bottom: var(--help-button-colour) solid;
+}
+
+.carousel-mod-paragraph{
+    padding: 0rem 1rem;
+}
+
+/*Footer with Nav Links*/
+footer{
+    box-sizing: border-box;
+    background-color: var(--footer-colour-mobile);
+    position: fixed;
+    bottom: 0;
+    display: grid;
+    width: 100%;
+    padding: 0 1rem;
+    max-height: 65px;
+    z-index: 5;
+    right: 0;
+    left: 0;
+}
+
+#footerLogoLink{
+    height: 0;
+}
+
+#footerLogo, #footerModuleTitle, .footerImg{
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    margin-bottom: 0;    
+}
+
+#footerLogoSection{
+    grid-column: 1/2;
+    display: flex;
+    flex-direction: row;
+}
+
+#footerModuleTitle{
+    grid-column: 2/11;
+    font-size: 1rem;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    top: 5%;
+}
+
+#footerNavigation{
+    grid-column: 11/12;
+    padding-bottom: 0;
+    justify-self: end;
+    position: relative;
+}
+
+#footerLogo{
+    height: 3vh;
+    padding-top: 1.3rem;
+}
+
+.footerImg{
+    height: 4vh;
+}
+
+#helpButton{
+    background-color: var(--help-button-colour);
+}
+
+.footerButton{
+    border: none;
+    margin: 0;
+    box-sizing: border-box; 
+    background-color: var(--zero-opacity); 
+}
+
+/*Rollover and hover effects*/
+.footerButton:hover, 
+li:hover, 
+#helpButton.footerButton:hover{
+    background-color: var(--hover-colour);
+    color: var(--text-hover-colour);
+}
+
+/*Popup and Slide out area*/
+#slideMenu{
+    background-color: var(--footer-colour-mobile);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    bottom: -100%;
+    transition: bottom 0.3s ease-in-out;
+    z-index: 2;
+    padding: 0 0 65px 0;
+    text-align: center;   
+}
+
+ul{
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li{
+    padding: 0.7rem;
+}
+
+#slideMenu.on{
+    bottom: 0;
+}
+
+.slideLink{
+    text-decoration: none;
+    color: var(--text-colour);
+}
+
+/*help popup*/
+#helpPopup{
+    position: absolute;
+    bottom: 110%;
+    right: 0;
+    box-sizing: border-box;
+    background-color: var(--footer-colour-mobile);
+    color: var(--text-colour);
+    z-index: 8;
+    width: 200px;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 1rem;
+    opacity: 0; 
+    visibility: hidden; 
+    transition: opacity 0.5s ease-out, visibility 0s linear 0.5s;
+}
+
+#helpPopup.visible{
+    opacity: 1;
+    visibility: visible; 
+}
+
+/*Responsive Changes*/
+/* Large phones & Tablets*/
+@media only screen and (min-width:600px) {
+    #textArea{
+        margin-bottom: 20%;
+    }
+    
+    .carousel-container{
+        margin-top: 5%;
+    }
+
+    footer{
+        max-height: 100px;
+        padding: 0 2rem;
+    }
+
+    #footerLogo{
+        height: 4vh;
+        padding-top: 1.2rem;
+    }
+    
+    .footerImg{
+        height: 5vh;
+    }
+
+    #footerModuleTitle{
+        font-size: 1.2rem;
+    }
+}
+
+/* Tablets */
+@media only screen and (min-width: 768px) {
+    
+}
+
+/* Laptops & Desktops */
+@media only screen and (min-width: 992px) {
+    #textArea{
+        margin-bottom: 25%;
+        width: 80%;
+        font-size: 1.2rem;
+    }
+
+    footer{
+        max-height: 100px;
+        padding: 0 3rem;
+    }
+
+    #footerLogo{
+        height: 5vh;
+        padding-top: 1.2rem;
+    }
+    
+    .footerImg{
+        height: 5vh;
+    }
+
+    #footerModuleTitle{
+        font-size: 1.5rem;
+    }
+}
+
+/*Large Devices*/
+@media only screen and (min-width: 1200){
+    #textArea{
+        margin-bottom: 25%;
+        width: 80%;
+    }
+
+    footer{
+        max-height: 100px;
+        padding: 0 3rem;
+    }
+
+    #footerLogo{
+        height: 5vh;
+        padding-top: 1.2rem;
+    }
+    
+    .footerImg{
+        height: 5vh;
+    }
+
+    #footerModuleTitle{
+        font-size: 1.5rem;
+    }
+}

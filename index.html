@@ -3,114 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quakes Dev Zone</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        /* Logo styling */
-        .logo {
-            width: 100px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 3em;
-            margin: 0;
-        }
-
-        .shaking {
-            display: inline-block;
-            animation: shake 2s infinite ease-in-out;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-
-        /* Grid Styling */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-            margin-top: 30px;
-            width: 60%;
-        }
-
-        .box {
-            background-color: #ddd;
-            border: 2px solid #bbb;
-            padding: 40px;
-            text-align: center;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease;
-        }
-
-        .box:hover {
-            background-color: #ccc;
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-            font-weight: bold;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Heather Taylor | Mockup</title>
+    <script type="module" src="/script.js"></script>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Logo image (placeholder or real image can be linked) -->
-        <img src="logo.png" alt="Quakes Dev Zone Logo" class="logo">
+    <!--Text Box for Course Content-->
+    <div id="mainContent">
+        <button class="carousel-control" id="prev">&#10094;</button>
+        <button class="carousel-control" id="next">&#10095;</button>
+        <div id="textArea"></div>
 
-        <h1>
-            <span id="quake" class="shaking">Quake</span>
-            <span>Dev Zone</span>
-        </h1>
-
-        <!-- 3x3 grid of boxes -->
-        <div class="grid">
-            <div class="box">
-                <a href="anb.html">Airsoft/Autism NB</a>
-            </div>
-            <div class="box">
-                <a href="rezzy.html">Rezzy The Peat Snake</a>
-            </div>
-            <div class="box">
-                <a href="game.html">GAME</a>
-            </div>
-            <div class="box">Box 4</div>
-            <div class="box">Box 5</div>
-            <div class="box">Box 6</div>
-            <div class="box">Box 7</div>
-            <div class="box">Box 8</div>
-            <div class="box">Box 9</div>
+    </div>
+  
+    <!--Footer with Navigation-->
+    <footer>
+         <!--Help popup-->
+        <div id="helpPopup">
+            <div id="helpPopupContent">Use the arrows to progress with your modules</div>
         </div>
+
+        <!--Logo leading to UFred Website-->
+        <div id="footerLogoSection">
+            <a href="https://ufred.ca" id="footerLogoLink">
+                <img id="footerLogo" class="footerImg" src="./assets/images/ufred_logo.svg"></img>
+            </a>   
+        </div>
+        
+        <!--Title and Module number of displayed content-->
+        <div id="footerModuleTitle"></div>
+
+        <!--Footer naviation items-->
+        <div id="footerNavigation">
+            <button id="slideMenuButton" class="footerButton"><img id="footerMenu" class="footerImg" src="./assets/images/menu_icon.svg"></img></button>
+            <button id="linksButton" class="footerButton"><img id="footerLinks" class="footerImg" src="./assets/images/links_icon.svg"></img></button>
+            <button id="helpButton" class="footerButton"><img id="footerHelp" class="footerImg" src="./assets/images/help_icon.svg"></img></button>
+        </div>
+    </footer>
+
+    <!--Menu that slides out with push of menu button-->
+    <div id="slideMenu">
+        <ul id="slideMenuSelect">
+            <li class="slideMenuItem"><a class="slideLink" href="https://ufred.ca">Home</a></li>
+            <li class="slideMenuItem"><a class="slideLink" href="https://www.linkedin.com/school/university-of-fredericton/">LinkedIn</a></li>
+        </ul>
     </div>
 </body>
 </html>
